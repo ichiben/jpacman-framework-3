@@ -9,118 +9,108 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import nl.tudelft.jpacman.game.Game;
 import nl.tudelft.jpacman.ui.ScorePanel.ScoreFormatter;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The default JPacMan UI frame. The PacManUI consists of the following
  * elements:
- * 
+ *
  * <ul>
  * <li>A score panel at the top, displaying the score of the player(s).
  * <li>A board panel, displaying the current level, i.e. the board and all units
  * on it.
  * <li>A button panel, containing all buttons provided upon creation.
  * </ul>
- * 
+ *
  * @author Jeroen Roosen 
- * 
+ *
  */
 public class PacManUI extends JFrame {
 
-	/**
-	 * Default serialisation UID.
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * Default serialisation UID.
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * The desired frame rate interval for the graphics in milliseconds, 40
-	 * being 25 fps.
-	 */
-	private static final int FRAME_INTERVAL = 40;
+    /**
+     * The desired frame rate interval for the graphics in milliseconds, 40
+     * being 25 fps.
+     */
+    private static final int FRAME_INTERVAL = 40;
 
-	/**
-	 * The panel displaying the player scores.
-	 */
-	private final ScorePanel scorePanel;
+    /**
+     * The panel displaying the player scores.
+     */
+    private final ScorePanel scorePanel;
 
-	/**
-	 * The panel displaying the game.
-	 */
-	private final BoardPanel boardPanel;
+    /**
+     * The panel displaying the game.
+     */
+    private final BoardPanel boardPanel;
 
-	/**
-	 * Creates a new UI for a JPac-Man game.
-	 * 
-	 * @param game
-	 *            The game to play.
-	 * @param buttons
-	 *            The map of caption-to-action entries that will appear as
-	 *            buttons on the interface.
-	 * @param keyMappings
-	 *            The map of keyCode-to-action entries that will be added as key
-	 *            listeners to the interface.
-	 * @param sf
-	 *            The formatter used to display the current score. 
-	 */
-	@SuppressWarnings("initialization") // Due to extension of a JFrame.
-	public PacManUI(final Game game, final Map<String, Action> buttons,
-			final Map<Integer, Action> keyMappings, @Nullable ScoreFormatter sf) {
-		super("JPac-Man");
-		assert game != null;
-		assert buttons != null;
-		assert keyMappings != null;
-		
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+    /**
+     * Creates a new UI for a JPac-Man game.
+     *
+     * @param game
+     *            The game to play.
+     * @param buttons
+     *            The map of caption-to-action entries that will appear as
+     *            buttons on the interface.
+     * @param keyMappings
+     *            The map of keyCode-to-action entries that will be added as key
+     *            listeners to the interface.
+     * @param scoreFormatter
+     *            The formatter used to display the current score.
+     */
+    public PacManUI(final Game game, final Map<String, Action> buttons,
+                    final Map<Integer, Action> keyMappings,
+                    ScoreFormatter scoreFormatter) {
+        super("JPac-Man");
+        assert game != null;
+        assert buttons != null;
+        assert keyMappings != null;
 
-		PacKeyListener keys = new PacKeyListener(keyMappings);
-		addKeyListener(keys);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		JPanel buttonPanel = new ButtonPanel(buttons, this);
+        PacKeyListener keys = new PacKeyListener(keyMappings);
+        addKeyListener(keys);
 
-		scorePanel = new ScorePanel(game.getPlayers());
-		if (sf != null) {
-			scorePanel.setScoreFormatter(sf);
-		}
-		
-		boardPanel = new BoardPanel(game);
-		
-		Container contentPanel = getContentPane();
-		contentPanel.setLayout(new BorderLayout());
-		contentPanel.add(buttonPanel, BorderLayout.SOUTH);
-		contentPanel.add(scorePanel, BorderLayout.NORTH);
-		contentPanel.add(boardPanel, BorderLayout.CENTER);
+        JPanel buttonPanel = new ButtonPanel(buttons, this);
 
-		pack();
-	}
+        scorePanel = new ScorePanel(game.getPlayers());
+        if (scoreFormatter != null) {
+            scorePanel.setScoreFormatter(scoreFormatter);
+        }
 
-	/**
-	 * Starts the "engine", the thread that redraws the interface at set
-	 * intervals.
-	 */
-	public void start() {
-		setVisible(true);
+        boardPanel = new BoardPanel(game);
 
-		ScheduledExecutorService service = Executors
-				.newSingleThreadScheduledExecutor();
+        Container contentPanel = getContentPane();
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+        contentPanel.add(scorePanel, BorderLayout.NORTH);
+        contentPanel.add(boardPanel, BorderLayout.CENTER);
 
-		service.scheduleAtFixedRate(new Runnable() {
+        pack();
+    }
 
-			@Override
-			public void run() {
-				nextFrame();
-			}
-		}, 0, FRAME_INTERVAL, TimeUnit.MILLISECONDS);
+    /**
+     * Starts the "engine", the thread that redraws the interface at set
+     * intervals.
+     */
+    public void start() {
+        setVisible(true);
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(this::nextFrame, 0, FRAME_INTERVAL, TimeUnit.MILLISECONDS);
+    }
 
-	}
-
-	/**
-	 * Draws the next frame, i.e. refreshes the scores and game.
-	 */
-	private void nextFrame() {
-		boardPanel.repaint();
-		scorePanel.refresh();
-	}
+    /**
+     * Draws the next frame, i.e. refreshes the scores and game.
+     */
+    private void nextFrame() {
+        boardPanel.repaint();
+        scorePanel.refresh();
+    }
 }

@@ -9,45 +9,45 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * A game with one player and a single level.
- * 
+ *
  * @author Jeroen Roosen 
  */
 public class SinglePlayerGame extends Game {
 
-	/**
-	 * The player of this game.
-	 */
-	private final Player player;
+    /**
+     * The player of this game.
+     */
+    private final Player player;
 
-	/**
-	 * The level of this game.
-	 */
-	private final Level level;
+    /**
+     * The level of this game.
+     */
+    private final Level level;
 
-	/**
-	 * Create a new single player game for the provided level and player.
-	 * 
-	 * @param p
-	 *            The player.
-	 * @param l
-	 *            The level.
-	 */
-	protected SinglePlayerGame(Player p, Level l) {
-		assert p != null;
-		assert l != null;
+    /**
+     * Create a new single player game for the provided level and player.
+     *
+     * @param player
+     *            The player.
+     * @param level
+     *            The level.
+     */
+    protected SinglePlayerGame(Player player, Level level) {
+        assert player != null;
+        assert level != null;
 
-		this.player = p;
-		this.level = l;
-		level.registerPlayer(p);
-	}
+        this.player = player;
+        this.level = level;
+        this.level.registerPlayer(player);
+    }
 
-	@Override
-	public List<Player> getPlayers() {
-		return ImmutableList.of(player);
-	}
+    @Override
+    public List<Player> getPlayers() {
+        return ImmutableList.of(player);
+    }
 
-	@Override
-	public Level getLevel() {
-		return level;
-	}
+    @Override
+    public Level getLevel() {
+        return level;
+    }
 }

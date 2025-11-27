@@ -13,7 +13,6 @@
   <module name="TreeWalker">
     <module name="SuppressWarningsHolder" />
     <property name="tabWidth" value="4"/>
-    <module name="FileContentsHolder"/>
     <module name="JavadocMethod">
       <property name="scope" value="package"/>
       <property name="suppressLoadErrors" value="true"/>
@@ -93,6 +92,14 @@
       <property name="severity" value="ignore"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
+    <module name="Indentation">
+      <property name="basicOffset" value="4" />
+      <property name="braceAdjustment" value="0" />
+      <property name="caseIndent" value="4" />
+      <property name="throwsIndent" value="8" />
+      <property name="arrayInitIndent" value="4" />
+      <property name="lineWrappingIndentation" value="4" />
+    </module>
     <module name="TodoComment">
       <property name="severity" value="ignore"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
@@ -102,6 +109,9 @@
     <module name="MethodLength">
       <property name="max" value="30"/>
     </module>
+  </module>
+  <module name="FileTabCharacter">
+    <property name="eachLine" value="true"/>
   </module>
   <module name="NewlineAtEndOfFile">
     <property name="severity" value="ignore"/>
@@ -119,7 +129,5 @@
     <property name="message" value="Line has trailing spaces."/>
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
-  <module name="SuppressionCommentFilter"/>
-  <module name="SuppressWithNearbyCommentFilter"/>
   <module name="SuppressWarningsFilter" />
 </module>
