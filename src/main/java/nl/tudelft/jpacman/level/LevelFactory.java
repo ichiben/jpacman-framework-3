@@ -2,17 +2,16 @@ package nl.tudelft.jpacman.level;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import nl.tudelft.jpacman.board.Board;
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.board.Square;
-import nl.tudelft.jpacman.npc.NPC;
-import nl.tudelft.jpacman.npc.ghost.Ghost;
+import nl.tudelft.jpacman.npc.Ghost;
 import nl.tudelft.jpacman.npc.ghost.GhostColor;
 import nl.tudelft.jpacman.npc.ghost.GhostFactory;
 import nl.tudelft.jpacman.sprite.PacManSprites;
 import nl.tudelft.jpacman.sprite.Sprite;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Factory that creates levels and units.
@@ -72,7 +71,7 @@ public class LevelFactory {
      *            A list of squares from which players may start the game.
      * @return A new level for the board.
      */
-    public Level createLevel(Board board, List<NPC> ghosts,
+    public Level createLevel(Board board, List<Ghost> ghosts,
                              List<Square> startPositions) {
 
         // We'll adopt the simple collision map for now.
@@ -86,7 +85,7 @@ public class LevelFactory {
      *
      * @return The new ghost.
      */
-    NPC createGhost() {
+    Ghost createGhost() {
         ghostIndex++;
         ghostIndex %= GHOSTS;
         switch (ghostIndex) {
@@ -135,8 +134,8 @@ public class LevelFactory {
         }
 
         @Override
-        public @Nullable Direction nextMove() {
-            return randomMove();
+        public Optional<Direction> nextAiMove() {
+            return Optional.empty();
         }
     }
 }

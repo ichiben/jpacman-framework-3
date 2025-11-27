@@ -1,7 +1,6 @@
 package nl.tudelft.jpacman.board;
 
 import nl.tudelft.jpacman.sprite.Sprite;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A unit that can be placed on a {@link Square}.
@@ -13,7 +12,7 @@ public abstract class Unit {
     /**
      * The square this unit is currently occupying.
      */
-    private @Nullable Square square;
+    private Square square;
 
     /**
      * The direction this unit is facing.
@@ -112,4 +111,19 @@ public abstract class Unit {
      */
     public abstract Sprite getSprite();
 
+    /**
+     * A utility method for implementing the ghost AI.
+     *
+     * @param amountToLookAhead the amount of squares to follow this units direction in.
+     * @return The square amountToLookAhead spaces in front of this unit.
+     */
+    public Square squaresAheadOf(int amountToLookAhead) {
+        Direction targetDirection = this.getDirection();
+        Square destination = this.getSquare();
+        for (int i = 0; i < amountToLookAhead; i++) {
+            destination = destination.getSquareAt(targetDirection);
+        }
+
+        return destination;
+    }
 }

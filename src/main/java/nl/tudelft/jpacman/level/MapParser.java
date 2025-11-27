@@ -11,12 +11,13 @@ import nl.tudelft.jpacman.PacmanConfigurationException;
 import nl.tudelft.jpacman.board.Board;
 import nl.tudelft.jpacman.board.BoardFactory;
 import nl.tudelft.jpacman.board.Square;
-import nl.tudelft.jpacman.npc.NPC;
+import nl.tudelft.jpacman.npc.Ghost;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Creates new {@link Level}s from text representations.
  *
- * @author Jeroen Roosen 
+ * @author Jeroen Roosen
  */
 public class MapParser {
 
@@ -66,7 +67,7 @@ public class MapParser {
 
         Square[][] grid = new Square[width][height];
 
-        List<NPC> ghosts = new ArrayList<>();
+        List<Ghost> ghosts = new ArrayList<>();
         List<Square> startPositions = new ArrayList<>();
 
         makeGrid(map, width, height, grid, ghosts, startPositions);
@@ -76,7 +77,7 @@ public class MapParser {
     }
 
     private void makeGrid(char[][] map, int width, int height,
-                          Square[][] grid, List<NPC> ghosts, List<Square> startPositions) {
+                          Square[][] grid, List<Ghost> ghosts, List<Square> startPositions) {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 char c = map[x][y];
@@ -105,7 +106,7 @@ public class MapParser {
      * @param c
      *            Character describing the square type.
      */
-    protected void addSquare(Square[][] grid, List<NPC> ghosts,
+    protected void addSquare(Square[][] grid, List<Ghost> ghosts,
                              List<Square> startPositions, int x, int y, char c) {
         switch (c) {
             case ' ':
@@ -120,7 +121,7 @@ public class MapParser {
                 levelCreator.createPellet().occupy(pelletSquare);
                 break;
             case 'G':
-                Square ghostSquare = makeGhostSquare(ghosts);
+                Square ghostSquare = makeGhostSquare(ghosts, levelCreator.createGhost());
                 grid[x][y] = ghostSquare;
                 break;
             case 'P':
@@ -134,9 +135,16 @@ public class MapParser {
         }
     }
 
-    private Square makeGhostSquare(List<NPC> ghosts) {
+    /**
+     * creates a Square with the specified ghost on it
+     * and appends the placed ghost into the ghost list.
+     *
+     * @param ghosts all the ghosts in the level so far, the new ghost will be appended
+     * @param ghost the newly created ghost to be placed
+     * @return a square with the ghost on it.
+     */
+    protected Square makeGhostSquare(List<Ghost> ghosts, Ghost ghost) {
         Square ghostSquare = boardCreator.createGround();
-        NPC ghost = levelCreator.createGhost();
         ghosts.add(ghost);
         ghost.occupy(ghostSquare);
         return ghostSquare;
@@ -231,6 +239,8 @@ public class MapParser {
      * @throws IOException
      *             when the resource could not be read.
      */
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+                        justification = "try with resources always cleans up")
     public Level parseMap(String mapName) throws IOException {
         try (InputStream boardStream = MapParser.class.getResourceAsStream(mapName)) {
             if (boardStream == null) {
@@ -238,5 +248,12 @@ public class MapParser {
             }
             return parseMap(boardStream);
         }
+    }
+
+    /**
+     * @return the BoardCreator
+     */
+    protected BoardFactory getBoardCreator() {
+        return boardCreator;
     }
 }
