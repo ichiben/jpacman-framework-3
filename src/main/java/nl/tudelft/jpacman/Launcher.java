@@ -201,7 +201,8 @@ public class Launcher {
      * @throws IOException
      *             When a resource could not be read.
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new Launcher().launch();
+        System.out.println("Test on 20251127");
     }
 }
