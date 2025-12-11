@@ -165,10 +165,13 @@ public class Launcher {
 
     private Player getSinglePlayer(final Game game) {
         List<Player> players = game.getPlayers();
-        if (players.isEmpty()) {
-            throw new IllegalArgumentException("Game has 0 players.");
+        if (   players.isEmpty()   ) {
+        throw new IllegalArgumentException("Game has 0 players.");
         }
         return players.get(0);
+
+
+
     }
 
     /**
